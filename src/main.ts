@@ -1,8 +1,9 @@
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ResponseInterceptor } from './interceptors/response.interceptor';
 import * as dotenv from 'dotenv';
+import { GlobalExceptionFilter } from './shared/filters/global-exception.filter';
+import { ResponseInterceptor } from './shared/interceptors/response.interceptor';
 
 async function bootstrap() {
 
@@ -22,9 +23,10 @@ async function bootstrap() {
   console.log('Starting application...');
 
   const app = await NestFactory.create(AppModule);
-
+  
   // Register global response interceptor
   app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   // log app start URL
   console.log(`Application is running on: http://localhost:${process.env.PORT}`);
